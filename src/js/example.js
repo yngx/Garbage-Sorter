@@ -33,32 +33,32 @@ function init() {
 
     imgLandfill.onload = handleImageLoad;
     imgLandfill.onerror = handleImageError;
-    imgLandfill.src = "landfill.png"
+    imgLandfill.src = "src/img/landfill.png"
 
     //ugly but loads the images
     imgBanana.onload = handleImageLoad;
     imgBanana.onerror = handleImageError;
-    imgBanana.src = "banana.png";
+    imgBanana.src = "src/img/banana.png";
 
     imgCellphone.onload = handleImageLoad;
     imgCellphone.onerror = handleImageError;
-    imgCellphone = "cellphone.png"
+    imgCellphone = "src/img/cellphone.png"
 
     imgChips.onload = handleImageLoad;
     imgChips.onerror = handleImageError;
-    imgChips = "chips.png"
+    imgChips = "src/img/chips.png"
 
     imgPlasticBag.onload = handleImageLoad;
     imgPlasticBag.onerror = handleImageError;
-    imgPlasticBag = "plasticbag.png"
+    imgPlasticBag = "src/img/plasticbag.png"
 
     imgShirt.onload = handleImageLoad;
     imgShirt.onerror = handleImageError;
-    imgShirt = "shirt.png"
+    imgShirt = "src/img/shirt.png"
 
     imgWaterBottle.onload = handleImageLoad;
     imgWaterBottle.onerror = handleImageError;
-    imgWaterBottle = "waterbottle.png"
+    imgWaterBottle = "src/img/waterbottle.png"
 
 }
 
