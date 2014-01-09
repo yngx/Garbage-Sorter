@@ -25,11 +25,10 @@ var contentManager;
 
 var INSTANCE_COUNT = 100;
 var START_TIME = 30000; //ms
+var WARNING_TIME = 20000; //ms
 var GAME_ON = true;
 
 // SET UP SETTINGS CLASS
-
-
 var no_type_map = {
 	0 : "compost",
 	1 : "landfill",
@@ -77,6 +76,7 @@ function reset(){
     stage.update();
     
     pointInt = 0;
+    currentCountDown = createCountDown(START_TIME); 
     console.log("Game has been reset");
 }
 
@@ -189,7 +189,10 @@ function tick(){
 				timeText.text = 0;
 				GAME_ON = !GAME_ON;
 			}
-		
+			if(convertMStoS(currentCountDown()) < convertMStoS(WARNING_TIME)){
+				timeText.color = "red";
+			}
+
 			// check recycle collison
 			if(collision(garbage[i], recycle))
 			{

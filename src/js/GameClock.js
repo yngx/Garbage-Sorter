@@ -1,4 +1,6 @@
-var Timer = function(){
+// This class is not being used at the moment
+
+var GameClock = function(){
 	
 	var self = this;
 	var instance;
