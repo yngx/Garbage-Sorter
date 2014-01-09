@@ -6,35 +6,49 @@ function ContentManager(){
     // Method called back once all elements have been downloaded
     var onDownloadCompleted;
     // Number of elements to download;
-    var NUM_ELMENTS_TO_DOWNLOAD = 6;
+    var NUM_ELMENTS_TO_DOWNLOAD = 10;
 
     // setting the callback method
     this.SetDownloadCompleted = function(callbackMethod){
       onDownloadCompleted = callbackMethod;
     };
 
-	// garbage items
+	// garbage items, need to rename
     this.imgA = new Image();
 	this.imgB = new Image();
 	this.imgC = new Image(); 
 	this.imgD = new Image();
 	this.imgE = new Image();
 	this.imgF = new Image();
+	
+	// bin items, need to rename
+	this.imgG = new Image();
+	this.imgH = new Image();
+	this.imgI = new Image();
+	this.imgJ = new Image();
 		
     var numImagesLoaded = 0;
 
     // public method to launch the download process
     this.StartDownload = function () {
         // get garbage images
-        SetDownloadParameters(this.imgA, "src/img/banana.png", handleImageLoad, handleImageError)	;
-        SetDownloadParameters(this.imgB, "src/img/chips.png", handleImageLoad, handleImageError);
-        SetDownloadParameters(this.imgC, "src/img/cellphone.png", handleImageLoad, handleImageError);
-        SetDownloadParameters(this.imgD, "src/img/shirt.png", handleImageLoad, handleImageError);
-        SetDownloadParameters(this.imgE, "src/img/waterbottle.png", handleImageLoad, handleImageError);
-        SetDownloadParameters(this.imgF, "src/img/plasticbag.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgA, "src/img/banana.png", handleImageLoad, handleImageError)	;
+        SetDownload(this.imgB, "src/img/chips.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgC, "src/img/cellphone.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgD, "src/img/shirt.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgE, "src/img/waterbottle.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgF, "src/img/plasticbag.png", handleImageLoad, handleImageError);
+        
+        // get garbage bin images
+        SetDownload(this.imgH, "src/img/landfill.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgG, "src/img/compost.png", handleImageLoad, handleImageError)	;
+        SetDownload(this.imgI, "src/img/recycle.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgJ, "src/img/reuse.png", handleImageLoad, handleImageError);
+        
     }
-
-	this.GetRandomImage = function (){
+	
+	// random garbage
+	this.GetGarbage = function (num){
 		
 		var no_to_img_map = {
 			0 : this.imgA,
@@ -45,10 +59,21 @@ function ContentManager(){
 			5 : this.imgF,
 		};
 		
-		return no_to_img_map[Math.floor(Math.random() * 6)];
+		return no_to_img_map[num];
 	}
 
-    function SetDownloadParameters(imgElement, url,loadedHandler, errorHandler){
+	this.GetBin = function (binType) {
+		var type_to_img = {
+			'compost' : this.imgG,
+			'landfill': this.imgH,
+			'recycle' : this.imgI,
+			'reuse'	  : this.imgJ,
+		};
+		
+		return type_to_img[binType];
+	}
+
+    function SetDownload(imgElement, url,loadedHandler, errorHandler){
         
         imgElement.src = url;
         console.log("img source: " + imgElement.src);

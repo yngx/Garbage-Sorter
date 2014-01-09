@@ -2,26 +2,32 @@
 /**
  * Created by xaoyang on 12/12/13.
  */
+ 
 (function (window){
     function Garbage(garbageType, imgGarbage, screen_width, screen_height, x_pos, y_pos){
         this.initialize(garbageType, imgGarbage, screen_width, screen_width, x_pos, y_pos);
     }
     
-    Garbage.prototype = new createjs.BitmapAnimation();
+    Garbage.prototype = new createjs.Sprite();
     
-    //public properties
+    //public properties [not really sure what they do]
     Garbage.prototype.bounds = 0;   // visual radius size
     Garbage.prototype.hit = 0;  // average radial disparity
 
+	Garbage.width;
+	Garbage.height;
+	Garbage.radius;
+	Garbage.boundingBox;
+	
     // constructor:
-    Garbage.prototype.BitmapAnimation_intialize = Garbage.prototype.initialize;
+    Garbage.prototype.Sprite_intialize = Garbage.prototype.initialize;
 
     // initialization
     Garbage.prototype.initialize = function (garbageType, imgGarbage, screen_width, screen_height, x_pos, y_pos){
-        console.log("Garbage object initialized");
-        console.log("Garbage type: " +  garbageType);
-        console.log("Garbage img src: " + imgGarbage.src);
-       
+
+       	this.width = imgGarbage.width;
+       	this.height = imgGarbage.height;
+       	
        	var halfX = Math.floor(imgGarbage.width / 2);
        	var halfY = Math.floor(imgGarbage.height / 2);
        	
@@ -34,7 +40,7 @@
             }
         });
 
-        this.BitmapAnimation_intialize(localSpriteSheet);
+        this.Sprite_intialize(localSpriteSheet);
         // start playing the first sequence:
         this.gotoAndPlay("move");    // animate
 
@@ -54,37 +60,48 @@
         //velocity
         this.vX = 1;
         this.vY = 0;
+        
         // starting directly at the first frame of the walk_h sequence
         this.currentFrame = 0;
+       
+       	// create the bounding box for the object
+       	this.boundingBox = new createjs.Shape();
+        this.radius = Math.sqrt((this.width/2 * this.width/2) + (this.height/2 * this.height/2));
+       	this.boundingBox.graphics.beginStroke("purple").ss(5,0,1).drawCircle(0, 0, this.radius);
+       	
+       	       
     }
 
     Garbage.prototype.tick = function() {
-        this.x += this.vX * this.direction;
-
+        this.x += this.vX * (this.direction * 5);
+		
+		this.boundingBox.x = this.x;
+		this.boundingBox.y = this.y;
+		
 		/*
         if(this.x > screen_width + ){
             this.x = - 70;
         }*/
     }
 	
-	Garbage.prototype.onPress = function(evt) {
-	    evt.onMouseMove = function(evt) {
-	        evt.target.x = evt.stageX;
-	        evt.target.y = evt.stageY;
-	    }
-	    evt.onMouseUp = function(evt){
-	        console.log("up");
-	        if(evt.target.y < 370)
-	            evt.target.vX = 0;
-	        else
-	        {
-	            evt.target.vX = 1;
-	        }    
-	         
-	           
-	        
-	    }
-	}
+	Garbage.prototype.on("pressmove", function(evt) {
+		evt.target.x = evt.stageX;
+		evt.target.y = evt.stageY;
+	});
+
+	
+	Garbage.prototype.on("rollover", function(evt) {
+		evt.target.alpha = .5;
+		console.log(evt.target.radius);
+		console.log(evt.target.type);
+		stage.addChild(evt.target.boundingBox);
+	});
+	
+	
+	Garbage.prototype.on("rollout", function(evt) {
+		evt.target.alpha = 1;
+		stage.removeChild(evt.target.boundingBox);
+	});
 	
 	
     /*
