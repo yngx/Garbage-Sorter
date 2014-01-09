@@ -18,6 +18,7 @@
 	Garbage.height;
 	Garbage.radius;
 	Garbage.boundingBox;
+    Garbage.pressed = false;
 	
     // constructor:
     Garbage.prototype.Sprite_intialize = Garbage.prototype.initialize;
@@ -66,12 +67,13 @@
        	this.boundingBox = new createjs.Shape();
         this.radius = Math.sqrt((this.width/2 * this.width/2) + (this.height/2 * this.height/2));
        	this.boundingBox.graphics.beginStroke("purple").ss(5,0,1).drawCircle(0, 0, this.radius);
-       	
+       	this.boundingBox.visible = false;
+        stage.addChild(this.boundingBox);
        	       
     }
 
     Garbage.prototype.tick = function() {
-        this.x += this.vX * (this.direction * 5);
+        this.x += this.vX * (this.direction * 2);
 		
 		this.boundingBox.x = this.x;
 		this.boundingBox.y = this.y;
@@ -80,20 +82,28 @@
 	Garbage.prototype.on("pressmove", function(evt) {
 		evt.target.x = evt.stageX;
 		evt.target.y = evt.stageY;
+
+        evt.target.pressed = true;
 	});
 
+    Garbage.prototype.on("pressup", function(evt) {
+        evt.target.pressed = false;
+        evt.target.boundingBox.visible = true;
+    });
 	
 	Garbage.prototype.on("rollover", function(evt) {
 		evt.target.alpha = .5;
+        evt.target.boundingBox.visible = true;
 		//console.log(evt.target.radius);
 		//console.log(evt.target.type);
-		stage.addChild(evt.target.boundingBox);
+		//stage.addChild(evt.target.boundingBox);
 	});
 	
 	
 	Garbage.prototype.on("rollout", function(evt) {
 		evt.target.alpha = 1;
-		stage.removeChild(evt.target.boundingBox);
+        evt.target.boundingBox.visible = false;
+		//stage.removeChild(evt.target.boundingBox);
 	});
 
     window.Garbage = Garbage;

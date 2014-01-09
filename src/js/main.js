@@ -4,6 +4,8 @@
  
 var canvas;
 var stage;
+var level;
+var contentManager;
 var screen_width;
 var screen_height;
 
@@ -21,7 +23,6 @@ var recycle;
 var reuse;
 var landfill;
 var compost;
-var contentManager;
 
 var INSTANCE_COUNT = 100;
 var START_TIME = 30000; //ms
@@ -68,6 +69,8 @@ function init(){
     contentManager = new ContentManager();
     contentManager.SetDownloadCompleted(startGame);
     contentManager.StartDownload();
+
+    //level = new Level(stage, contentManager, 'basic', screen_width, screen_height);
 }
 
 function reset(){
@@ -76,34 +79,33 @@ function reset(){
     stage.update();
     
     pointInt = 0;
+    GAME_ON = true;
     currentCountDown = createCountDown(START_TIME); 
     console.log("Game has been reset");
 }
 
 // initialize garbage items
 function loadGarbage() {
-	
-	// start positions
+
 	var pos_x = 0;
 	var pos_y = 610;
-	
+
 	garbage = new Array(INSTANCE_COUNT);
-	
-	var randomNum; 
-	var randomGarbage; 
-	
+	var randomGarbage = {};
+
 	// generate garbage and assign start locations
-	for(var i = 0; i < garbage.length; i++){
+	for(var i = 0; i < garbage.length ; i++){
 		
-		randomNum = Math.floor(Math.random() * 6)		
-		randomGarbage = contentManager.GetGarbage(randomNum);
-				
+		// gets a random garbage based on available bin types for the level
+		randomGarbage = contentManager.GetGarbage(['landfill', 'recycle']);
+
 		if(i != 0){
-			pos_x -= (Math.floor(randomGarbage.width / 2));
+			pos_x -= (Math.floor(randomGarbage.img.width / 2));
 		}
 		
-		garbage[i] = new Garbage(no_type_map[randomNum], randomGarbage, screen_width, screen_height, pos_x, pos_y);
-		pos_x -= (Math.floor(randomGarbage.width / 2)) + 10;
+		// need to fix this line
+		garbage[i] = new Garbage(randomGarbage.bin, randomGarbage.img, screen_width, screen_height, pos_x, pos_y);
+		pos_x -= (Math.floor(randomGarbage.img.width / 2)) + 10;
 	}
 }
 
@@ -192,37 +194,44 @@ function tick(){
 			if(convertMStoS(currentCountDown()) < convertMStoS(WARNING_TIME)){
 				timeText.color = "red";
 			}
-
 			// check recycle collison
 			if(collision(garbage[i], recycle))
-			{
-				handleCollision(garbage[i], recycle);
-				stage.removeChild(garbage[i]);
-				garbage.splice(i, 1);
+			{	
+				if(!garbage[i].pressed){
+					handleCollision(garbage[i], recycle);
+					stage.removeChild(garbage[i]);
+					garbage.splice(i, 1);
+				}
 			}	
 		
 			// check compost collison
 			if(collision(garbage[i], compost))
 			{
-				handleCollision(garbage[i], compost);
-				stage.removeChild(garbage[i]);
-				garbage.splice(i, 1);
+				if(!garbage[i].pressed){
+					handleCollision(garbage[i], compost);
+					stage.removeChild(garbage[i]);
+					garbage.splice(i, 1);
+				}
 			}
 		
 			// check reuse collison
 			if(collision(garbage[i], reuse))
 			{
-				handleCollision(garbage[i], reuse);
-				stage.removeChild(garbage[i]);
-				garbage.splice(i, 1);
+				if(!garbage[i].pressed){
+					handleCollision(garbage[i], reuse);
+					stage.removeChild(garbage[i]);
+					garbage.splice(i, 1);
+				}
 			}
 		
 			// check landfill collison
 			if(collision(garbage[i], landfill))
 			{
-				handleCollision(garbage[i], landfill);
-				stage.removeChild(garbage[i]);
-				garbage.splice(i, 1);
+				if(!garbage[i].pressed){
+					handleCollision(garbage[i], landfill);
+					stage.removeChild(garbage[i]);
+					garbage.splice(i, 1);
+				}
 			}
 	}
 	
@@ -234,7 +243,7 @@ function collision(objA, objB) {
 	var xD = objA.x - objB.x;
 	var yD = objA.y - objB.y;
 	
-	var dist = Math.sqrt(xD*xD + yD*yD);
+	var dist = Math.sqrt(xD * xD + yD * yD);
 	return dist < objA.radius + objB.radius;
 }
 

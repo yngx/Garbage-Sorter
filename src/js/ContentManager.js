@@ -24,17 +24,56 @@ function ContentManager(){
 	this.imgJ = new Image();
 
     // returns image
-    this.GetGarbage = function (num){
-        
-        var no_to_img_map = {
-            0 : this.imgA,
-            1 : this.imgB,
-            2 : this.imgC,
-            3 : this.imgD,
-            4 : this.imgE,
-            5 : this.imgF,
-        };
-        
+    this.GetGarbage = function (binType){
+        binType = typeof binType !== 'undefined' ? binType : false;
+
+        // if user does not define bintypes thus allowing all types of garbage
+        if(!binType){
+            // FIGURE OUT A BETTER IMPLEMENTATION..... 
+            var num = Math.floor(Math.random() * 6); 
+            var no_to_img_map =  [
+                {   bin : "compost",
+                    img  : this.imgA  },  
+                {   bin : "landfill",
+                    img  : this.imgB  },
+                {   bin : "landfill",
+                    img  : this.imgC  },
+                {   bin : "reuse",
+                    img  : this.imgD  },
+                {   bin : "recycle",
+                    img  : this.imgE  },
+                {   bin : "recycle",
+                    img  : this.imgF  },
+            ];
+        }
+        else{
+
+            // goes through the list of useable types
+            // need to introduce an object that holds the types and images
+            // CURRENT IMPLEMENTATION SUCKS!!!!!!
+            var no_to_img_map = [];
+            for(var i = 0; i < binType.length; i++){
+                switch (binType[i]) {
+                    case "recycle":
+                        no_to_img_map.push({bin : binType[i], img: this.imgE});
+                        no_to_img_map.push({bin : binType[i], img: this.imgF});
+                        break;
+                    case "landfill":
+                        no_to_img_map.push({bin : binType[i], img: this.imgB});
+                        no_to_img_map.push({bin : binType[i], img: this.imgC});
+                        break;
+                    case "reuse":
+                        no_to_img_map.push({bin : binType[i], img: this.imgD});
+                        break;
+                    case "compost":
+                        no_to_img_map.push({bin : binType[i], img: this.imgA});
+                        break;
+                }
+            }
+
+            var num = Math.floor(Math.random() * no_to_img_map.length);
+        }
+
         return no_to_img_map[num];
     }
 
