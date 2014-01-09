@@ -41,15 +41,11 @@
         this.Sprite_intialize(localSpriteSheet);
         // start playing the first sequence:
         this.gotoAndPlay("move");    // animate
-
-        //this.shadow = new createjs.Shadow("#000", 3,2,2);
 		
 		// GarbageBin type
         this.type = GarbageBinType;
         
-        //
         this.direction = 1;
-
         this.screen_width = screen_width;
         this.screen_height = screen_height;
 		
@@ -76,15 +72,12 @@
     }
 
     GarbageBin.prototype.tick = function() {
-		/*
-        if(this.x > screen_width + ){
-            this.x = - 70;
-        }*/
+        // not doing anything right now
     }
 	
 	GarbageBin.prototype.on("rollover", function(evt) {
 		evt.target.alpha = .5;
-		console.log(evt.target.type);
+		//console.log(evt.target.type);
 		//stage.addChild(evt.target.boundingBox);
 	});
 	
@@ -93,24 +86,6 @@
 		evt.target.alpha = 1;
 		//stage.removeChild(evt.target.boundingBox);
 	});
-	
-	
-    /*
-    GarbageBin.prototype.hitPoint = function (tX, tY){
-        return this.hitRadius(tX, tY, 0);
-    }
-
-    GarbageBin.prototype.hitRadius = function (tX, tY, tHit){
-        //early returns speed it up
-        if (tX - tHit > this.x + this.hit) { return; }
-        if (tX + tHit < this.x - this.hit) { return; }
-        if (tY - tHit > this.y + this.hit) { return; }
-        if (tY + tHit < this.y - this.hit) { return; }
-
-        //now do the circle distance test
-        return this.hit + tHit > Math.sqrt(Math.pow(Math.abs(this.x - tX), 2) + Math.pow(Math.abs(this.y - tY), 2));
-    }
-    */
 
     window.GarbageBin = GarbageBin;
 }(window))

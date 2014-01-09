@@ -3,15 +3,11 @@
  */
  
 function ContentManager(){
-    // Method called back once all elements have been downloaded
-    var onDownloadCompleted;
-    // Number of elements to download;
-    var NUM_ELMENTS_TO_DOWNLOAD = 10;
 
-    // setting the callback method
-    this.SetDownloadCompleted = function(callbackMethod){
-      onDownloadCompleted = callbackMethod;
-    };
+    var onDownloadCompleted;
+    var numImagesLoaded = 0;
+
+    var NUM_ELMENTS_TO_DOWNLOAD = 10;
 
 	// garbage items, need to rename
     this.imgA = new Image();
@@ -26,8 +22,38 @@ function ContentManager(){
 	this.imgH = new Image();
 	this.imgI = new Image();
 	this.imgJ = new Image();
-		
-    var numImagesLoaded = 0;
+
+    // returns image
+    this.GetGarbage = function (num){
+        
+        var no_to_img_map = {
+            0 : this.imgA,
+            1 : this.imgB,
+            2 : this.imgC,
+            3 : this.imgD,
+            4 : this.imgE,
+            5 : this.imgF,
+        };
+        
+        return no_to_img_map[num];
+    }
+
+    // returns image
+    this.GetBin = function (binType) {
+        var type_to_img = {
+            'compost' : this.imgG,
+            'landfill': this.imgH,
+            'recycle' : this.imgI,
+            'reuse'   : this.imgJ,
+        };
+        
+        return type_to_img[binType];
+    }
+
+    // setting the callback method
+    this.SetDownloadCompleted = function(callbackMethod){
+      onDownloadCompleted = callbackMethod;
+    };
 
     // public method to launch the download process
     this.StartDownload = function () {
@@ -46,33 +72,8 @@ function ContentManager(){
         SetDownload(this.imgJ, "src/img/reuse.png", handleImageLoad, handleImageError);
         
     }
-	
-	// random garbage
-	this.GetGarbage = function (num){
-		
-		var no_to_img_map = {
-			0 : this.imgA,
-			1 : this.imgB,
-			2 : this.imgC,
-			3 : this.imgD,
-			4 : this.imgE,
-			5 : this.imgF,
-		};
-		
-		return no_to_img_map[num];
-	}
 
-	this.GetBin = function (binType) {
-		var type_to_img = {
-			'compost' : this.imgG,
-			'landfill': this.imgH,
-			'recycle' : this.imgI,
-			'reuse'	  : this.imgJ,
-		};
-		
-		return type_to_img[binType];
-	}
-
+    // hands the images
     function SetDownload(imgElement, url,loadedHandler, errorHandler){
         
         imgElement.src = url;

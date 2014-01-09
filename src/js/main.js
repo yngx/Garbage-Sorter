@@ -23,12 +23,23 @@ var landfill;
 var compost;
 var contentManager;
 
-var INSTANCE = 100;
+var INSTANCE_COUNT = 100;
 var START_TIME = 30000; //ms
 var GAME_ON = true;
 
-// from stackoverflow
-// http://stackoverflow.com/questions/19244394/creating-a-timer-for-a-javascript-game-gives-undesirable-results
+// SET UP SETTINGS CLASS
+
+
+var no_type_map = {
+	0 : "compost",
+	1 : "landfill",
+	2 : "landfill",
+	3 : "reuse", 
+	4 : "recycle", 
+	5 : "recycle", 
+};
+
+// uses date.now() to set up timer
 function createCountDown(timeRemaining) {
     var startTime = Date.now();
     return function() {
@@ -36,15 +47,22 @@ function createCountDown(timeRemaining) {
     }
 }
 
-function init(){
-    console.log("initialized");
+// takes millseconds and converts to seconds with one digit following the period
+function convertMStoS(num, p){
+	p = typeof p !== 'undefined' ? p : 1;
+	return (num/ 1000).toFixed(p);
+}
 
+function init(){
+    //console.log("initialized");
+    
     canvas = document.getElementById("testCanvas");
 
     stage = new createjs.Stage(canvas);
     screen_width = canvas.width;
     screen_height= canvas.height;
     
+    // enable mouse/touch events
 	stage.enableMouseOver(10);
 	createjs.Touch.enable(stage);
 
@@ -62,37 +80,29 @@ function reset(){
     console.log("Game has been reset");
 }
 
-var no_type_map = {
-	0 : "compost",
-	1 : "landfill",
-	2 : "landfill",
-	3 : "reuse", 
-	4 : "recycle", 
-	5 : "recycle", 
-};
-
+// initialize garbage items
 function loadGarbage() {
 	
-	// positions the garbage will be loaded in
+	// start positions
 	var pos_x = 0;
 	var pos_y = 610;
 	
-	garbage = new Array(INSTANCE);
+	garbage = new Array(INSTANCE_COUNT);
 	
-	var randomNo; 
+	var randomNum; 
 	var randomGarbage; 
 	
 	// generate garbage and assign start locations
 	for(var i = 0; i < garbage.length; i++){
 		
-		randomNo = Math.floor(Math.random() * 6)		
-		randomGarbage = contentManager.GetGarbage(randomNo);
+		randomNum = Math.floor(Math.random() * 6)		
+		randomGarbage = contentManager.GetGarbage(randomNum);
 				
 		if(i != 0){
 			pos_x -= (Math.floor(randomGarbage.width / 2));
 		}
 		
-		garbage[i] = new Garbage(no_type_map[randomNo], randomGarbage, screen_width, screen_height, pos_x, pos_y);
+		garbage[i] = new Garbage(no_type_map[randomNum], randomGarbage, screen_width, screen_height, pos_x, pos_y);
 		pos_x -= (Math.floor(randomGarbage.width / 2)) + 10;
 	}
 }
@@ -106,7 +116,7 @@ function loadBins() {
 
 }
 
-function loadText() {
+function setText() {
 
     titleText = new createjs.Text("Garbage Sorter", "bold 36px Arial", "#ffffff");
     titleText.x = 10;
@@ -139,7 +149,7 @@ function startGame(){
 	loadGarbage();
 	
 	// set up text
-	loadText();
+	setText();
 
 	// add bins
 	stage.addChild(recycle);
@@ -165,43 +175,6 @@ function startGame(){
     createjs.Ticker.addEventListener("tick", tick);
     
     createjs.Ticker.setFPS(60);
-}
-
-function collision(objA, objB) {
-	var xD = objA.x - objB.x;
-	var yD = objA.y - objB.y;
-	
-	var dist = Math.sqrt(xD*xD + yD*yD);
-	return dist < objA.radius + objB.radius;
-}
-
-// checks to see if the two types matches
-function isSameType(objA, objB) {
-	return objA.type === objB.type;
-}
-
-// handles the collision 
-function handleCollision(objA, objB){
-	
-	if(isSameType(objA, objB)){
-		console.log('are same type');
-		
-		pointInt += 100;
-		pointText.text = pointInt;
-		
-	}
-	else{
-		console.log('not the same type');
-		
-		pointInt -= 50;
-		pointText.text = pointInt;
-	}
-}
-
-// takes millseconds and converts to seconds with one digit following the period
-function convertMStoS(num, p){
-	p = typeof p !== 'undefined' ? p : 1;
-	return (num/ 1000).toFixed(p);
 }
 
 function tick(){
@@ -252,4 +225,35 @@ function tick(){
 	
     stage.update();
     }
+}
+
+function collision(objA, objB) {
+	var xD = objA.x - objB.x;
+	var yD = objA.y - objB.y;
+	
+	var dist = Math.sqrt(xD*xD + yD*yD);
+	return dist < objA.radius + objB.radius;
+}
+
+// checks to see if the two types matches
+function isSameType(objA, objB) {
+	return objA.type === objB.type;
+}
+
+// handles the collision 
+function handleCollision(objA, objB){
+	
+	if(isSameType(objA, objB)){
+		console.log('are same type');
+		
+		pointInt += 100;
+		pointText.text = pointInt;
+		
+	}
+	else{
+		console.log('not the same type');
+		
+		pointInt -= 50;
+		pointText.text = pointInt;
+	}
 }

@@ -31,7 +31,7 @@
        	var halfX = Math.floor(imgGarbage.width / 2);
        	var halfY = Math.floor(imgGarbage.height / 2);
        	
-        // if width exceeds the image, will not display the image
+        // becareful: if width exceeds the image, will not display the image
         var localSpriteSheet = new createjs.SpriteSheet({
             images: [imgGarbage], // image to use
             frames: {width: imgGarbage.width, height: imgGarbage.height, regX: halfX, regY: halfY},
@@ -44,8 +44,6 @@
         // start playing the first sequence:
         this.gotoAndPlay("move");    // animate
 
-        //this.shadow = new createjs.Shadow("#000", 3,2,2);
-		
 		// garbage type
         this.type = garbageType;
         this.direction = 1;
@@ -77,11 +75,6 @@
 		
 		this.boundingBox.x = this.x;
 		this.boundingBox.y = this.y;
-		
-		/*
-        if(this.x > screen_width + ){
-            this.x = - 70;
-        }*/
     }
 	
 	Garbage.prototype.on("pressmove", function(evt) {
@@ -92,8 +85,8 @@
 	
 	Garbage.prototype.on("rollover", function(evt) {
 		evt.target.alpha = .5;
-		console.log(evt.target.radius);
-		console.log(evt.target.type);
+		//console.log(evt.target.radius);
+		//console.log(evt.target.type);
 		stage.addChild(evt.target.boundingBox);
 	});
 	
@@ -102,24 +95,6 @@
 		evt.target.alpha = 1;
 		stage.removeChild(evt.target.boundingBox);
 	});
-	
-	
-    /*
-    Garbage.prototype.hitPoint = function (tX, tY){
-        return this.hitRadius(tX, tY, 0);
-    }
-
-    Garbage.prototype.hitRadius = function (tX, tY, tHit){
-        //early returns speed it up
-        if (tX - tHit > this.x + this.hit) { return; }
-        if (tX + tHit < this.x - this.hit) { return; }
-        if (tY - tHit > this.y + this.hit) { return; }
-        if (tY + tHit < this.y - this.hit) { return; }
-
-        //now do the circle distance test
-        return this.hit + tHit > Math.sqrt(Math.pow(Math.abs(this.x - tX), 2) + Math.pow(Math.abs(this.y - tY), 2));
-    }
-    */
 
     window.Garbage = Garbage;
 }(window))
