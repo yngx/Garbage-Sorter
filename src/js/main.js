@@ -97,7 +97,7 @@ function loadGarbage() {
 	for(var i = 0; i < garbage.length ; i++){
 		
 		// gets a random garbage based on available bin types for the level
-		randomGarbage = contentManager.GetGarbage(['landfill', 'recycle']);
+		randomGarbage = contentManager.GetGarbage(['compost']);
 
 		if(i != 0){
 			pos_x -= (Math.floor(randomGarbage.img.width / 2));

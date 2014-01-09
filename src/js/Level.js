@@ -11,6 +11,8 @@
 		this.levelWidth = gameWidth;
 		this.levelHeight = gameHeight;
 
+		this.levelText = null;
+
 		// objects
 		this.garbage = [];
 		this.garbageBin = [];
@@ -18,31 +20,36 @@
 
 		//settings
 		this.garbageInstances = 100;
-
 	}
 
 	Level.prototype.StartLevel = function() {
 	// depending on the level, populate accordingly
 	// need to figure out a better way of implementing this.... 
 
-	if(this.textLevel === "basic"){
-		this.binTypes = ['landfill', 'recycle'];
-	}
+		if(this.textLevel === "basic"){
+			this.binTypes = ['landfill', 'recycle'];
+		}
 
-	if(this.textLevel === "medium"){
-		this.binTypes = ['landfill', 'recycle', 'compost'];
-	}
+		if(this.textLevel === "medium"){
+			this.binTypes = ['landfill', 'recycle', 'compost'];
+		}
 
-	if(this.textLevel === "complex"){
-		this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
-	}
-
-	//set background of the level
+		if(this.textLevel === "complex"){
+			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
+		}
 
 
-	// place objects on the level
-	// place the correct bins and the correct garbage
+		// start 
+		this.LoadBins();
+		this.LoadGarbage();
 
+		for(var i = 0; i < this.garbageBin.length; i++){
+			this.levelStage.addChild(this.garbageBin[i]);
+		}
+
+		for(var i = 0; i < this.garbage.length; i++){
+			this.levelStage.addChild(this.garbage[i]);
+		}
 
 	};
 
@@ -74,39 +81,44 @@
 			this.garbage.push(new Garbage(randomGarbage.bin, randomGarbage.img, screen_width, screen_height, pos_x, pos_y));
 			pos_x -= (Math.floor(randomGarbage.img.width / 2)) + 10;
 		}
-
 	};
 
 	Level.prototype.setText = function() {
 		
-		titleText = new createjs.Text("Garbage Sorter", "bold 36px Arial", "#ffffff");
-    	titleText.x = 10;
-    	titleText.y = 10;
+		// not implemented yet
 
-    	timerText = new createjs.Text("Time Remaining: ", "bold 20px Arial", "#ffffff");
-    	timerText.x = 15;
-    	timerText.y = 45;
-	
-		timeText = new createjs.Text( convertMStoS(START_TIME) + " s", "bold 20px Arial", "#ffffff");
-		timeText.x = 180;
-		timeText.y = 45;
-		
-		scoreText = new createjs.Text("SCORE:", "bold 20px Arial", "#ffffff");
-		scoreText.x = screen_width - 200;
-		scoreText.y = 15;
-	
-		pointText = new createjs.Text(pointInt, "bold 20px Arial", "#ffffff");
-		pointText.x = screen_width - 105;
-		pointText.y = 15;
 	}
 
 	Level.prototype.setBackground = function() {
 		// NOT implemented at the moment
 	};
 
+
+	Level.prototype.handleCollision = function(objA, objB) {
+		var xD = objA.x - objB.x;
+		var yD = objA.y - objB.y;
+
+		var dist = Math.sqrt(xD * xD + yD * yD);
+
+		// collision
+		if(dist < objA.radius + objB.radius){
+			this.levelStage.removeChild(Garbage[i]);
+			Garbage.splice(i, 1);
+		}
+	};
+
 	// update
 	Level.prototype.Update = function() {
 
+		for(var i = 0; i < Garbage.length; i++)
+		{
+			Garbage[i].tick();
+			for(var j = 0; j < GarbageBin.length; j++){
+				this.handleCollision(Garbage[i], GarbageBin[j]);
+			}
+		}
+
+		this.levelStage.update();
 	};
 
 }(window));
