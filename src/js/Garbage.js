@@ -55,7 +55,8 @@
 		// default starting position
 		this.x = x;
 		this.y = y;
-		
+		this.movement = true;
+
         //velocity
         this.vX = 1;
         this.vY = 0;
@@ -73,13 +74,20 @@
     }
 
     Garbage.prototype.tick = function(speed) {
-        this.x += this.vX * (this.direction * speed);
+        
+        if(this.movement){
+            this.x += this.vX * (this.direction * speed);
+        }
 		
 		this.boundingBox.x = this.x;
 		this.boundingBox.y = this.y;
     }
 	
 	Garbage.prototype.on("pressmove", function(evt) {
+
+        // if user slects then no movement
+        evt.target.movement = false;
+
 		evt.target.x = evt.stageX;
 		evt.target.y = evt.stageY;
 
@@ -91,6 +99,8 @@
 	});
 
     Garbage.prototype.on("pressup", function(evt) {
+
+
         evt.target.pressed = false;
         evt.target.boundingBox.visible = true;
 

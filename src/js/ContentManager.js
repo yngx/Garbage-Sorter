@@ -7,7 +7,7 @@ function ContentManager(){
     var onDownloadCompleted;
     var numImagesLoaded = 0;
 
-    var NUM_ELMENTS_TO_DOWNLOAD = 10;
+    var NUM_ELMENTS_TO_DOWNLOAD = 13;
 
 	// garbage items, need to rename
     this.imgA = new Image();
@@ -16,12 +16,15 @@ function ContentManager(){
 	this.imgD = new Image();
 	this.imgE = new Image();
 	this.imgF = new Image();
+    this.imgCL = new Image();
 	
 	// bin items, need to rename
 	this.imgG = new Image();
 	this.imgH = new Image();
 	this.imgI = new Image();
 	this.imgJ = new Image();
+    this.imgK = new Image();
+    this.imgL = new Image();
 
     // returns image
     this.GetGarbage = function (binType){
@@ -36,14 +39,14 @@ function ContentManager(){
                     img  : this.imgA  },  
                 {   bin : "landfill",
                     img  : this.imgB  },
-                {   bin : "landfill",
+                {   bin : "electronics",
                     img  : this.imgC  },
                 {   bin : "reuse",
                     img  : this.imgD  },
                 {   bin : "recycle",
                     img  : this.imgE  },
                 {   bin : "recycle",
-                    img  : this.imgF  },
+                    img  : this.imgF  }
             ];
         }
         else{
@@ -60,13 +63,18 @@ function ContentManager(){
                         break;
                     case "landfill":
                         no_to_img_map.push({bin : binType[i], img: this.imgB});
-                        no_to_img_map.push({bin : binType[i], img: this.imgC});
                         break;
                     case "reuse":
                         no_to_img_map.push({bin : binType[i], img: this.imgD});
                         break;
                     case "compost":
                         no_to_img_map.push({bin : binType[i], img: this.imgA});
+                        break;
+                    case "electronics":
+                        no_to_img_map.push({bin : binType[i], img: this.imgC});
+                        break;
+                    case "chemical":
+                        no_to_img_map.push({bin : binType[i], img: this.imgCL});
                         break;
                 }
             }
@@ -84,6 +92,8 @@ function ContentManager(){
             'landfill': this.imgH,
             'recycle' : this.imgI,
             'reuse'   : this.imgJ,
+            'electronics' : this.imgK,
+            'chemical': this.imgL
         };
         
         return type_to_img[binType];
@@ -103,13 +113,15 @@ function ContentManager(){
         SetDownload(this.imgD, "src/img/shirt.png", handleImageLoad, handleImageError);
         SetDownload(this.imgE, "src/img/waterbottle.png", handleImageLoad, handleImageError);
         SetDownload(this.imgF, "src/img/plasticbag.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgCL, "src/img/flask.png", handleImageLoad, handleImageError);
         
         // get garbage bin images
         SetDownload(this.imgH, "src/img/landfill.png", handleImageLoad, handleImageError);
-        SetDownload(this.imgG, "src/img/compost.png", handleImageLoad, handleImageError)	;
+        SetDownload(this.imgG, "src/img/compost.png", handleImageLoad, handleImageError);
         SetDownload(this.imgI, "src/img/recycle.png", handleImageLoad, handleImageError);
         SetDownload(this.imgJ, "src/img/reuse.png", handleImageLoad, handleImageError);
-        
+        SetDownload(this.imgK, "src/img/electronics.png", handleImageLoad, handleImageError);
+        SetDownload(this.imgL, "src/img/chemical.png", handleImageLoad, handleImageError);
     }
 
     // hands the images

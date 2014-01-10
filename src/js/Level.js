@@ -4,7 +4,6 @@
 
 
 	function Level(stage, contentManager, textLevel, gameWidth, gameHeight){
-		console.log('in LEVEL!!');
 
 		this.levelStage = stage;
 		this.levelContentManager = contentManager;
@@ -22,7 +21,7 @@
 		this.binTypes = [];
 
 		//settings
-		this.garbageInstances = 100;
+		this.garbageInstances = 200;
 
 	}
 
@@ -41,8 +40,8 @@
 		}
 
 		if(this.textLevel === "complex"){
-			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
-			this.levelSpeed = 5;
+			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse', 'electronics', 'chemical'];
+			this.levelSpeed = 6;
 		}
 
 
@@ -127,6 +126,7 @@
 					point = -50;
 				}
 
+				this.levelStage.removeChild(objA.boundingBox);
 				this.levelStage.removeChild(objA);
 				this.garbage.splice(i, 1);
 			}
