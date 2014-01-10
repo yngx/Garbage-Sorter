@@ -1,11 +1,11 @@
 Garbage-Sorter
 ==============
 
-Garbage Sorter game using EaselJS
+Garbage Sorter browser game using EaselJS.
 
-TO DO:
+Click on start to start the game.
 
-Need to create bin class
-Implement Timer
-Implment garbage type
-Implement collision detection
+Currently need to work on:
+
+- auto positioning for bins according to screen size
+- auto positioning for garbage according to screen size
