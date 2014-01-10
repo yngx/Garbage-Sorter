@@ -4,6 +4,8 @@
 
 
 	function Level(stage, contentManager, textLevel, gameWidth, gameHeight){
+		console.log('in LEVEL!!');
+
 		this.levelStage = stage;
 		this.levelContentManager = contentManager;
 
@@ -94,31 +96,46 @@
 	};
 
 
-	Level.prototype.handleCollision = function(objA, objB) {
+	Level.prototype.handleCollision = function(objA, objB, i) {
 		var xD = objA.x - objB.x;
 		var yD = objA.y - objB.y;
 
 		var dist = Math.sqrt(xD * xD + yD * yD);
 
+		var point = 0;
 		// collision
 		if(dist < objA.radius + objB.radius){
-			this.levelStage.removeChild(Garbage[i]);
-			Garbage.splice(i, 1);
+			if(!objA.pressed){
+				if(objA.type === objB.type){
+					point = 100;
+				}
+				else{
+					point = -50;
+				}
+
+				this.levelStage.removeChild(objA);
+				this.garbage.splice(i, 1);
+			}
 		}
+
+		return point;
 	};
 
-	// update
+	// update later on... GET RID OF POINT INT AND POINT TEXT
 	Level.prototype.Update = function() {
 
-		for(var i = 0; i < Garbage.length; i++)
+		var point = 0;
+		for(var i = 0; i < this.garbage.length; i++)
 		{
-			Garbage[i].tick();
-			for(var j = 0; j < GarbageBin.length; j++){
-				this.handleCollision(Garbage[i], GarbageBin[j]);
+			this.garbage[i].tick();
+			for(var j = 0; j < this.garbageBin.length; j++){
+				point += this.handleCollision(this.garbage[i], this.garbageBin[j], i);
 			}
 		}
 
 		this.levelStage.update();
+		return point;
 	};
 
+	window.Level = Level;
 }(window));
