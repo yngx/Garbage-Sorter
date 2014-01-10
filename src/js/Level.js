@@ -21,7 +21,7 @@
 		this.binTypes = [];
 
 		//settings
-		this.garbageInstances = 200;
+		this.garbageInstances = 100;
 
 	}
 
@@ -78,8 +78,9 @@
 
 	Level.prototype.LoadGarbage = function() {
 		// start positions
+
 		var pos_x = 0;
-		var pos_y = 610;
+		var pos_y = this.levelHeight * .80;
 	
 		var randomGarbage = {};
 	
