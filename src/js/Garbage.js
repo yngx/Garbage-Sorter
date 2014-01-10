@@ -4,8 +4,8 @@
  */
  
 (function (window){
-    function Garbage(garbageType, imgGarbage, screen_width, screen_height, x_pos, y_pos){
-        this.initialize(garbageType, imgGarbage, screen_width, screen_width, x_pos, y_pos);
+    function Garbage(garbageType, imgGarbage, sW, sH, x, y){
+        this.initialize(garbageType, imgGarbage, sW, sH, x, y);
     }
     
     Garbage.prototype = new createjs.Sprite();
@@ -24,7 +24,7 @@
     Garbage.prototype.Sprite_intialize = Garbage.prototype.initialize;
 
     // initialization
-    Garbage.prototype.initialize = function (garbageType, imgGarbage, screen_width, screen_height, x_pos, y_pos){
+    Garbage.prototype.initialize = function (garbageType, imgGarbage, sW, sH, x, y){
 
        	this.width = imgGarbage.width;
        	this.height = imgGarbage.height;
@@ -49,12 +49,12 @@
         this.type = garbageType;
         this.direction = 1;
 
-        this.screen_width = screen_width;
-        this.screen_height = screen_height;
+        this.sWidth = sW;
+        this.sheight = sH;
 		
 		// default starting position
-		this.x = x_pos;
-		this.y = y_pos;
+		this.x = x;
+		this.y = y;
 		
         //velocity
         this.vX = 1;
@@ -72,8 +72,8 @@
        	       
     }
 
-    Garbage.prototype.tick = function() {
-        this.x += this.vX * (this.direction * 2);
+    Garbage.prototype.tick = function(speed) {
+        this.x += this.vX * (this.direction * speed);
 		
 		this.boundingBox.x = this.x;
 		this.boundingBox.y = this.y;
@@ -84,26 +84,32 @@
 		evt.target.y = evt.stageY;
 
         evt.target.pressed = true;
+        
+        if(isMobile){
+            evt.target.boundingBox.visible = true;
+        }
 	});
 
     Garbage.prototype.on("pressup", function(evt) {
         evt.target.pressed = false;
         evt.target.boundingBox.visible = true;
+
+        if(isMobile){
+             evt.target.boundingBox.visible = false;
+        }
     });
-	
+
+
+	// rollover and rollout does not work for touch
 	Garbage.prototype.on("rollover", function(evt) {
 		evt.target.alpha = .5;
         evt.target.boundingBox.visible = true;
-		//console.log(evt.target.radius);
-		//console.log(evt.target.type);
-		//stage.addChild(evt.target.boundingBox);
 	});
 	
 	
 	Garbage.prototype.on("rollout", function(evt) {
 		evt.target.alpha = 1;
         evt.target.boundingBox.visible = false;
-		//stage.removeChild(evt.target.boundingBox);
 	});
 
     window.Garbage = Garbage;

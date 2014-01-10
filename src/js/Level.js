@@ -14,6 +14,7 @@
 		this.levelHeight = gameHeight;
 
 		this.levelText = null;
+		this.levelSpeed = 1;
 
 		// objects
 		this.garbage = [];
@@ -22,6 +23,7 @@
 
 		//settings
 		this.garbageInstances = 100;
+
 	}
 
 	Level.prototype.StartLevel = function() {
@@ -30,14 +32,17 @@
 
 		if(this.textLevel === "basic"){
 			this.binTypes = ['landfill', 'recycle'];
+			this.levelSpeed = 1;
 		}
 
 		if(this.textLevel === "medium"){
 			this.binTypes = ['landfill', 'recycle', 'compost'];
+			this.levelSpeed = 3;
 		}
 
 		if(this.textLevel === "complex"){
 			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
+			this.levelSpeed = 5;
 		}
 
 
@@ -54,6 +59,15 @@
 		}
 
 	};
+
+	Level.prototype.SpeedUp = function() {
+		this.levelSpeed++;
+	}
+
+	Level.prototype.SpeedDown = function() {
+		if(this.levelSpeed > 1)
+			this.levelSpeed--;
+	}
 
 	Level.prototype.LoadBins = function() {
 
@@ -127,7 +141,7 @@
 		var point = 0;
 		for(var i = 0; i < this.garbage.length; i++)
 		{
-			this.garbage[i].tick();
+			this.garbage[i].tick(this.levelSpeed);
 			for(var j = 0; j < this.garbageBin.length; j++){
 				point += this.handleCollision(this.garbage[i], this.garbageBin[j], i);
 			}

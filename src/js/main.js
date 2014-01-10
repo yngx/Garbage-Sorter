@@ -25,9 +25,15 @@ var landfill;
 var compost;
 
 var INSTANCE_COUNT = 100;
-var START_TIME = 30000; //ms
+var START_TIME = 45000; //ms
 var WARNING_TIME = 20000; //ms
 var GAME_ON = true;
+
+// checks to see if mobile
+var isMobile;
+var window_width;
+var window_height;
+
 
 // SET UP SETTINGS CLASS
 var no_type_map = {
@@ -53,10 +59,22 @@ function convertMStoS(num, p){
 	return (num/ 1000).toFixed(p);
 }
 
+
+function handleCanvas(){
+
+	canvas = document.getElementById("canvas");
+	canvas.width = window.innerWidth * .985 ;
+	canvas.height= window.innerHeight * .9 ;	// need to display buttons at bottom
+
+}
+
 function init(){
-    //console.log("initialized");
-    
-    canvas = document.getElementById("testCanvas");
+
+	isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/); 
+
+    handleCanvas();
+
+    canvas = document.getElementById("canvas");
 
     stage = new createjs.Stage(canvas);
     screen_width = canvas.width;
@@ -71,7 +89,7 @@ function init(){
     contentManager.StartDownload();
 
     // testing out the level class
-    level = new Level(stage, contentManager, 'basic', screen_width, screen_height);
+    level = new Level(stage, contentManager, 'complex', screen_width, screen_height);
 }
 
 function reset(){
@@ -81,8 +99,17 @@ function reset(){
     
     pointInt = 0;
     GAME_ON = true;
+    ITEM_SPEED = 1;
     currentCountDown = createCountDown(START_TIME); 
     console.log("Game has been reset");
+}
+
+function speedUp(){
+	level.SpeedUp();
+}
+
+function speedDown(){
+	level.SpeedDown();
 }
 
 function setText() {
@@ -135,7 +162,7 @@ function tick(){
 
 		timeText.text = convertMStoS(currentCountDown()) + " seconds";  
 		if(convertMStoS(currentCountDown()) < 0 || convertMStoS(currentCountDown()) == 0){
-			timeText.text = 0;
+			timeText.text = "0.0 seconds";
 			GAME_ON = !GAME_ON;
 		}
 		if(convertMStoS(currentCountDown()) < convertMStoS(WARNING_TIME)){
@@ -143,7 +170,7 @@ function tick(){
 		}
 
 		// quick fix, update later
-		pointInt += level.Update(pointInt, pointText);
+		pointInt += level.Update();
 		pointText.text = pointInt;
 	}
 }
