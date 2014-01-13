@@ -57,6 +57,8 @@
 		this.y = y;
 		this.movement = true;
 
+        this.remove = false;
+
         // can scale image
         this.scaleX = .9;
         this.scaleY = .9;
@@ -79,9 +81,11 @@
 
     Garbage.prototype.tick = function(speed) {
         
+        /*
         if(this.movement){
             this.x += this.vX * (this.direction * speed);
         }
+        */
 		
 		this.boundingBox.x = this.x;
 		this.boundingBox.y = this.y;

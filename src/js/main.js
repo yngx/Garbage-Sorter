@@ -28,6 +28,7 @@ var INSTANCE_COUNT = 100;
 var START_TIME = 45000; //ms
 var WARNING_TIME = 20000; //ms
 var GAME_ON = true;
+var SETTING = 'easy';
 
 // checks to see if mobile
 var isMobile;
@@ -95,7 +96,7 @@ function init(){
     contentManager.StartDownload();
 
     // testing out the level class
-    level = new Level(stage, contentManager, 'hard', screen_width, screen_height);
+    level = new Level(stage, contentManager, screen_width, screen_height);
 }
 
 function reset(){
@@ -110,12 +111,22 @@ function reset(){
     console.log("Game has been reset");
 }
 
-function speedUp(){
-	level.SpeedUp();
+function easy(){
+	reset();
+	SETTING = 'easy';
+	init();
 }
 
-function speedDown(){
-	level.SpeedDown();
+function normal(){
+	reset();
+	SETTING = 'normal';
+	init();
+}
+
+function hard(){
+	reset();
+	SETTING = 'hard';
+	init();
 }
 
 function setText() {
@@ -156,6 +167,7 @@ function drawLines(num){
 
 }
 
+
 function startGame(){
     console.log("Game has started");
 
@@ -169,7 +181,7 @@ function startGame(){
     stage.addChild(scoreText);
 	stage.addChild(pointText);
 	
-	level.StartLevel();
+	level.StartLevel(SETTING);
 
 	// start timer
 	currentCountDown = createCountDown(START_TIME); 

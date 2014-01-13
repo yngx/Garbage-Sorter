@@ -3,16 +3,14 @@
 (function (window){
 
 
-	function Level(stage, contentManager, textLevel, gameWidth, gameHeight){
+	function Level(stage, contentManager, gameWidth, gameHeight){
 
 		this.levelStage = stage;
 		this.levelContentManager = contentManager;
 
-		this.textLevel = textLevel;
 		this.levelWidth = gameWidth;
 		this.levelHeight = gameHeight;
 
-		this.levelText = null;
 		this.levelSpeed = 1;
 
 		// objects
@@ -25,50 +23,42 @@
 
 	}
 
-	Level.prototype.StartLevel = function() {
+	Level.prototype.StartLevel = function(stageLevel) {
 	// depending on the level, populate accordingly
 	// need to figure out a better way of implementing this.... 
-		if(this.textLevel === "one"){
+		stageLevel = typeof stageLevel !== 'undefined' ? stageLevel : 'easy';
+
+		//alert(stageLevel);
+
+		if(stageLevel === "one"){
 			this.binTypes = ['landfill'];
 			this.levelSpeed = 1;
 		}
 
-		if(this.textLevel === "four"){
+		if(stageLevel === "four"){
 			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
 			this.levelSpeed = 1;
 		}
 
-		if(this.textLevel === "easy"){
+		if(stageLevel === "easy"){
 			this.binTypes = ['landfill', 'recycle'];
 			this.levelSpeed = 1;
 		}
 
-		if(this.textLevel === "normal"){
+		if(stageLevel === "normal"){
 			this.binTypes = ['landfill', 'recycle', 'compost'];
 			this.levelSpeed = 3;
 		}
 
-		if(this.textLevel === "hard"){
+		if(stageLevel === "hard"){
 			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse', 'electronics', 'chemical'];
 			this.levelSpeed = 6;
 		}
 
 
 		// start 
-		//this.LoadGarbage();
+		this.LoadGarbage();
 		this.LoadBins();
-		
-		/*
-		for(var i = 0; i < this.garbage.length; i++){
-			this.levelStage.addChild(this.garbage[i]);
-		}
-		*/
-
-		for(var i = 0; i < this.garbageBin.length; i++){
-			this.levelStage.addChild(this.garbageBin[i]);
-		}
-
-
 	};
 
 	Level.prototype.SpeedUp = function() {
@@ -103,31 +93,48 @@
 			this.garbageBin.push(new GarbageBin(this.binTypes[i], contentManager.GetBin(this.binTypes[i]), xPos, yPos));
 		}*/
 
-
 		// position bins vertical 3 x 2
 		binCount > 3 ? yPos = yp/ 4 : yPos = yp / (binCount + 1);
-		binCount > 3 ? xPos = 300 : xPos = 450;
+		binCount > 3 ? xPos = 330 : xPos = 450;
 
 		var j = 0;
 		for(var i = 0; i < this.binTypes.length ; i++){
 
 			// happens once
 			if(i === 3){
-				xPos = 500;
+				xPos = 530;
 				j = 0;
 			}
 
-			console.log("placed bin at x: " + xPos + " y: " + (yPos + (yPos * j)));
 			this.garbageBin.push(new GarbageBin(this.binTypes[i], contentManager.GetBin(this.binTypes[i]), xPos, yPos + (yPos * j) ));
 			j++;
 		}
 
+		for(var i = 0; i < this.garbageBin.length; i++){
+			this.levelStage.addChild(this.garbageBin[i]);
+		}
 
 	};
 
 	Level.prototype.LoadGarbage = function() {
 		// start positions
 
+		var garbageCount = 5;
+		var xp = this.levelWidth / (this.binTypes.length + 1);
+		var yp = this.levelHeight;
+
+		var xPos = 50;
+		var yPos = yp / garbageCount;
+
+		var randomGarbage = {};
+
+		for(var i = 0; i < garbageCount; i++){
+
+			randomGarbage = this.levelContentManager.GetGarbage(this.binTypes);	
+			this.garbage.push(new Garbage(randomGarbage.bin, randomGarbage.img, screen_width, screen_height, xPos, (yPos + 40 + ((yPos * .7) * i))));
+		}
+
+		/*
 		var pos_x = 0;
 		var pos_y = this.levelHeight * .85;
 	
@@ -145,6 +152,12 @@
 			// need to fix this line
 			this.garbage.push(new Garbage(randomGarbage.bin, randomGarbage.img, screen_width, screen_height, pos_x, pos_y));
 			pos_x -= (Math.floor(randomGarbage.img.width / 2)) + 10;
+		}
+		*/
+
+
+		for(var i = 0; i < this.garbage.length; i++){
+			this.levelStage.addChild(this.garbage[i]);
 		}
 	};
 
@@ -177,12 +190,10 @@
 					point = -50;
 				}
 
-				this.levelStage.removeChild(objA.boundingBox);
-				this.levelStage.removeChild(objA);
-				this.garbage.splice(i, 1);
+				objA.remove = true;
 			}
 		}
-
+		
 		return point;
 	};
 
@@ -194,9 +205,28 @@
 		{
 			this.garbage[i].tick(this.levelSpeed);
 			for(var j = 0; j < this.garbageBin.length; j++){
-				point += this.handleCollision(this.garbage[i], this.garbageBin[j], i);
+				point += this.handleCollision(this.garbage[i], this.garbageBin[j]);
+			}
+
+			if(this.garbage[i].remove){
+				this.levelStage.removeChild(this.garbage[i].boundingBox);
+				this.levelStage.removeChild(this.garbage[i]);
+				this.garbage.splice(i, 1);
 			}
 		}
+
+		if(this.garbage.length === 0){
+			for(var i = 0; i < this.garbageBin.length; i++){
+				this.levelStage.removeChild(this.garbageBin[i]);
+			}
+
+			this.LoadGarbage();
+
+			for(var i = 0; i < this.garbageBin.length; i++){
+				this.levelStage.addChild(this.garbageBin[i]);
+			}
+		}
+
 
 		this.levelStage.update();
 		return point;
