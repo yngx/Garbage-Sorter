@@ -21,41 +21,53 @@
 		this.binTypes = [];
 
 		//settings
-		this.garbageInstances = 100;
+		this.garbageInstances = 500;
 
 	}
 
 	Level.prototype.StartLevel = function() {
 	// depending on the level, populate accordingly
 	// need to figure out a better way of implementing this.... 
+		if(this.textLevel === "one"){
+			this.binTypes = ['landfill'];
+			this.levelSpeed = 1;
+		}
 
-		if(this.textLevel === "basic"){
+		if(this.textLevel === "four"){
+			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse'];
+			this.levelSpeed = 1;
+		}
+
+		if(this.textLevel === "easy"){
 			this.binTypes = ['landfill', 'recycle'];
 			this.levelSpeed = 1;
 		}
 
-		if(this.textLevel === "medium"){
+		if(this.textLevel === "normal"){
 			this.binTypes = ['landfill', 'recycle', 'compost'];
 			this.levelSpeed = 3;
 		}
 
-		if(this.textLevel === "complex"){
+		if(this.textLevel === "hard"){
 			this.binTypes = ['landfill', 'recycle', 'compost', 'reuse', 'electronics', 'chemical'];
 			this.levelSpeed = 6;
 		}
 
 
 		// start 
+		//this.LoadGarbage();
 		this.LoadBins();
-		this.LoadGarbage();
+		
+		/*
+		for(var i = 0; i < this.garbage.length; i++){
+			this.levelStage.addChild(this.garbage[i]);
+		}
+		*/
 
 		for(var i = 0; i < this.garbageBin.length; i++){
 			this.levelStage.addChild(this.garbageBin[i]);
 		}
 
-		for(var i = 0; i < this.garbage.length; i++){
-			this.levelStage.addChild(this.garbage[i]);
-		}
 
 	};
 
@@ -70,9 +82,46 @@
 
 	Level.prototype.LoadBins = function() {
 
+		var xp = this.levelWidth / (this.binTypes.length + 1);
+		var yp = this.levelHeight;
+
+		var xPos;
+		var yPos;
+
+		var binCount = this.binTypes.length;
+
+		/*
+		// positions bin across
 		for(var i = 0; i < this.binTypes.length ; i++){
-			this.garbageBin.push(new GarbageBin(this.binTypes[i], contentManager.GetBin(this.binTypes[i]), this.levelWidth, this.levelHeight, (100 + (250 * i)), 220));
+			yPos = yp * .25;
+
+			i === 0 ? xPos = xp - (xp / 2) : xPos = xp + (xp * i);
+
+			if( i === this.binTypes.length - 1)
+				 xPos = xp + (xp * i) + (xp/2);
+
+			this.garbageBin.push(new GarbageBin(this.binTypes[i], contentManager.GetBin(this.binTypes[i]), xPos, yPos));
+		}*/
+
+
+		// position bins vertical 3 x 2
+		binCount > 3 ? yPos = yp/ 4 : yPos = yp / (binCount + 1);
+		binCount > 3 ? xPos = 300 : xPos = 450;
+
+		var j = 0;
+		for(var i = 0; i < this.binTypes.length ; i++){
+
+			// happens once
+			if(i === 3){
+				xPos = 500;
+				j = 0;
+			}
+
+			console.log("placed bin at x: " + xPos + " y: " + (yPos + (yPos * j)));
+			this.garbageBin.push(new GarbageBin(this.binTypes[i], contentManager.GetBin(this.binTypes[i]), xPos, yPos + (yPos * j) ));
+			j++;
 		}
+
 
 	};
 
@@ -80,7 +129,7 @@
 		// start positions
 
 		var pos_x = 0;
-		var pos_y = this.levelHeight * .80;
+		var pos_y = this.levelHeight * .85;
 	
 		var randomGarbage = {};
 	
@@ -99,7 +148,7 @@
 		}
 	};
 
-	Level.prototype.setText = function() {
+	Level.prototype.setText = function(level) {
 		
 		// not implemented yet
 
@@ -117,7 +166,8 @@
 		var dist = Math.sqrt(xD * xD + yD * yD);
 
 		var point = 0;
-		// collision
+
+		// if collision
 		if(dist < objA.radius + objB.radius){
 			if(!objA.pressed){
 				if(objA.type === objB.type){

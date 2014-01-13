@@ -63,8 +63,14 @@ function convertMStoS(num, p){
 function handleCanvas(){
 
 	canvas = document.getElementById("canvas");
-	canvas.width = window.innerWidth * .985 ;
-	canvas.height= window.innerHeight * .9 ;	// need to display buttons at bottom
+	//canvas.width = window.innerWidth * .985 ;
+	//canvas.height= window.innerHeight * .9 ;	// need to display buttons at bottom
+
+	var w = 640;
+	var h = 1136;
+
+	canvas.width = w * .985 ;
+	canvas.height= h * .9 ;	// need to display buttons at bottom
 
 }
 
@@ -79,7 +85,7 @@ function init(){
     stage = new createjs.Stage(canvas);
     screen_width = canvas.width;
     screen_height= canvas.height;
-    
+
     // enable mouse/touch events
 	stage.enableMouseOver(10);
 	createjs.Touch.enable(stage);
@@ -89,7 +95,7 @@ function init(){
     contentManager.StartDownload();
 
     // testing out the level class
-    level = new Level(stage, contentManager, 'complex', screen_width, screen_height);
+    level = new Level(stage, contentManager, 'hard', screen_width, screen_height);
 }
 
 function reset(){
@@ -135,10 +141,27 @@ function setText() {
 	pointText.y = 15;
 }
 
+function drawLines(num){
+
+	var x = canvas.width / (num + 1);
+	var y = canvas.height;
+
+	var g = [];
+
+	for(var i = 0; i < num; i ++){
+		g.push(new createjs.Shape());
+		g[i].graphics.setStrokeStyle(3).beginStroke("blue").moveTo(x+(x * i),0).lineTo(x+(x*i),y);
+		stage.addChild(g[i]);
+	}
+
+}
+
 function startGame(){
     console.log("Game has started");
 
 	setText();
+
+	//drawLines(3);
 
     stage.addChild(titleText);
     stage.addChild(timerText);
