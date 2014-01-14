@@ -14,6 +14,7 @@ var scoreText;
 var timerText;
 var pointText;
 var pointInt = 0;
+var fpsLabel;
 
 // timer stuff
 var currentCountDown;
@@ -34,17 +35,6 @@ var SETTING = 'easy';
 var isMobile;
 var window_width;
 var window_height;
-
-
-// SET UP SETTINGS CLASS
-var no_type_map = {
-	0 : "compost",
-	1 : "landfill",
-	2 : "landfill",
-	3 : "reuse", 
-	4 : "recycle", 
-	5 : "recycle", 
-};
 
 // uses date.now() to set up timer
 function createCountDown(timeRemaining) {
@@ -131,10 +121,6 @@ function hard(){
 
 function setText() {
 
-    titleText = new createjs.Text("Garbage Sorter", "bold 36px Arial", "#ffffff");
-    titleText.x = 10;
-    titleText.y = 10;
-
     timerText = new createjs.Text("Time Remaining: ", "bold 20px Arial", "#ffffff");
     timerText.x = 15;
     timerText.y = 45;
@@ -150,6 +136,10 @@ function setText() {
 	pointText = new createjs.Text(pointInt, "bold 20px Arial", "#ffffff");
 	pointText.x = screen_width - 105;
 	pointText.y = 15;
+
+	fpsLabel = new createjs.Text("-- fps", "bold 20px Arial", "#FFF");
+    fpsLabel.x = 15;
+    fpsLabel.y = 70;
 }
 
 function drawLines(num){
@@ -174,12 +164,11 @@ function startGame(){
 	setText();
 
 	//drawLines(3);
-
-    stage.addChild(titleText);
     stage.addChild(timerText);
     stage.addChild(timeText);
     stage.addChild(scoreText);
 	stage.addChild(pointText);
+	stage.addChild(fpsLabel);
 	
 	level.StartLevel(SETTING);
 
@@ -207,5 +196,6 @@ function tick(){
 		// quick fix, update later
 		pointInt += level.Update();
 		pointText.text = pointInt;
+		fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
 	}
 }
